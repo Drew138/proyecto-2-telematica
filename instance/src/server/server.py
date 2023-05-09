@@ -1,7 +1,7 @@
 import grpc
 import futures
-from node.src.handler.handler import MonitorServiceServicer
-from node.src.protobuf.monitor_pb2 import (
+from instance.src.handler.handler import MonitorServiceServicer
+from instance.src.protobuf.monitor_pb2 import (
     monitor_pb2_grpc,
 )
 

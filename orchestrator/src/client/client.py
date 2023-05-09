@@ -10,6 +10,22 @@ class Client:
         channel = grpc.insecure_channel(address)
         self.stub = monitor_pb2_grpc.MonitorServiceStub(channel)
 
+    def is_alive(self):
+        try:
+            # Get the underlying channel object
+            channel = stub.channel()
+
+            # Check the connection state
+            state = channel.state()
+
+            # Return True if the connection is ready, False otherwise
+            return state == grpc.ChannelConnectivity.READY
+
+        except grpc.RpcError as e:
+            # An error occurred, so the connection is not alive
+            return False
+
+
     def Ping(self):
         return self.stub.Ping(empty_pb2)
         

@@ -1,15 +1,9 @@
 import boto3
 from time import sleep
+from orchestrator.src.common import Instance
 
 
 class Controller:
-
-    class Instance:
-        def __init__(self, id: str, ip: str):
-            self.is_alive = True
-            self.id = id
-            self.ip = ip
-
     def __init__(self, ENV_VARS, config):
         # Env
 
@@ -27,6 +21,8 @@ class Controller:
         self.instance_config = config["instance_config"]
         self._set_ec2_client()
 
+
+    # AWS functions
     def _set_ec2_client(self):
         self.ec2_client = boto3.client(
             'ec2',
@@ -48,48 +44,78 @@ class Controller:
         instance = response['Instances'][0]
         instance_id = instance['InstanceId']
         instance_ip = instance['PrivateIpAddress']
-        return self.Instance(instance_id, instance_ip)
+        return Instance(instance_id, instance_ip)
 
     def delete_instance(self, instance: Instance):
         response = self.ec2_client.terminate_instances(
             InstanceIds=[instance.id]
         )
+    
+    # Internal functions
+    def new_instance(self) -> bool: 
+        if self.instances >= self.MAX_INSTANCES:
+            print("Maximum number of instances reached, can't create more")
+            return True
 
-    def modify_instance(self):
-        pass
+        # Create a new instace
+        instance = self.create_instance()
 
-    def read_metrics(self):
-        pass
+        # Create a monitor for the instance
+        monitor = Monitor(instance)
 
-    def decide(self, ip: str, metric: int) -> str:
-        response = ""
-        if metric > self.CREATE_METRIC:
-            if self.instances < self.MAX_INSTANCES:
-                self.create_node()
-                self.instances += 1
-                response = f"New node created. Total instances: {self.instances}"
-            else:
-                response = "Maximum number of nodes reached, can't create more"
-        elif metric < self.DELETE_METRIC:
-            if self.instances > self.MIN_INSTANCES:
-                self.delete_node(ip)
-                self.instances -= 1
-                response = f"Deleted node {ip}. Total instances: {self.instances}"
-            else:
-                response = "Minimum number of nodes reached, can't delete more"
+        # Increase instance count
+        self.instances += 1
 
-        return f"Node {ip}: Okay" if response == "" else response
+        # Start deciding on the monitor data
+        decide = threading.Thread(target=self.decide, args=(monitor))
+        decide.start()
 
-    def manager(self):
+        print(f"New instance created. Total instances: {self.instances}")
+        return False
+
+    def remove_instance(self, monitor: Monitor) -> bool:
+        instance = monitor.get_instance()
+
+        if self.instances <= self.MIN_INSTANCES:
+            print("Minimum number of instances reached, can't delete more")
+            return True
+
+        # Delete the instance
+        self.delete_instance(instance)
+
+        # Delete its monitor
+        del monitor
+
+        # Decrease the instance count
+        self.instances -= 1
+
+        print(f"Deleted instance {ip}. Total instances: {self.instances}")
+        return False
+
+    def manager(self, monitor):
         while True:
             # Wait before executing
             sleep(self.INTERVAL)
 
-            # Analyze
-            metrics = self.read_metrics()
-            for data in metrics:
-                ip = data.ip
-                metric = data.metric
+            # Check instance metric, ask for ping and metrics
+            err = monitor.check()
 
-                result = self.decide(ip, metric)
-                print(result)
+            # Error: Intentamos pingear varias veces sin exito
+            # Instancia caida
+            if err:
+                self.remove_instance(monitor)
+                break
+
+            metric = monitor.get_metric()
+            ip = monitor.get_instance().get_ip()
+            
+            result = ""
+            if metric > self.CREATE_METRIC:
+                err = self.new_instance()
+            elif metric < self.DELETE_METRIC:
+                err =self.remove_instance(monitor)
+                break
+            else:
+                print(f"Node {ip}: Okay")
+                
+            

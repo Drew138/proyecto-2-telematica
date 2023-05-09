@@ -1,6 +1,6 @@
 from google.protobuf import empty_pb2
-from node.src.monitor.monitor import Monitor
-from node.src.protobuf.monitor_pb2 import (
+from instance.src.monitor.monitor import Monitor
+from instance.src.protobuf.monitor_pb2 import (
     monitor_pb2_grpc,
     PingResponse, 
     MetricResponse, 
