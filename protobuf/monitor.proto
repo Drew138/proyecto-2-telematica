@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message PingResponse {
+    string message = 1;
+}
+
+message MetricResponse {
+    string message = 1;
+}
+
+message RegisterResponse {
+    string message = 1;
+}
+
+service MonitorService {
+  rpc Ping(google.protobuf.Empty) returns (PingResponse) {};
+  rpc GetMetrics(google.protobuf.Empty) returns (MetricResponse) {};
+  rpc Register(google.protobuf.Empty) returns (RegisterResponse) {};
+  rpc Unregister(google.protobuf.Empty) returns (RegisterResponse) {};
+}

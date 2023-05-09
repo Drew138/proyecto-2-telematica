@@ -1,0 +1,20 @@
+{
+  "instance_policy_config": {
+    "max_instances": 5,
+    "min_instances": 2,
+    "delete_policy": 10,
+    "creation_policy": 80
+  },
+  "auth_config": {
+    "aws_access_key_id": "",
+    "aws_secret_access_key": "",
+    "aws_session_token": "",
+    "region_name": "us-east-1"
+  },
+  "instance_config": {
+    "ami_id": "",
+    "security_group_ids": [""],
+    "instance_type": "t2.micro",
+    "key_pair_name": "vockey"
+  }
+}
