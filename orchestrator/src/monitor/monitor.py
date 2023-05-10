@@ -22,13 +22,6 @@ class Monitor:
         instance_id = self.instace.get_id()
         instance_ip = self.instace.get_ip()
 
-        # Create a resource
-        ec2_resource = boto3.resource('ec2')
-
-        # Wait until creation before establishing connection
-        instance = ec2_resource.Instance(instance_id)
-        instance.wait_until_running()
-
         # Now create the client
         return Client(instance_ip)
 

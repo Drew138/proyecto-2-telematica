@@ -22,6 +22,8 @@ class Controller:
         self.instance_config = config["instance_config"]
         self._set_ec2_client()
 
+        self.pending_instances = {}
+
 
     # AWS functions
     def _set_ec2_client(self):
@@ -53,6 +55,34 @@ class Controller:
         )
     
     # Internal functions
+    def start_instance(self, ip: str) -> Error:
+        # Funcion propuesta para que sea llamada por register 
+        # Inicia la instancia desde los pending instances
+        instancia = self.pending_instances[ip]
+        del self.pending_instances[ip]
+
+        # Create a monitor for the instance
+        monitor = Monitor(instance)
+
+        # Increase instance count
+        self.instances += 1
+
+        # Start deciding on the monitor data
+        decide = threading.Thread(target=self.decide, args=(monitor))
+        decide.start()
+
+        print(f"New instance created. Total instances: {self.instances}")
+
+    def stop_instance(self, ip):
+        # Get the event for the instance
+        monitor, event = self.running_instances[ip] 
+
+        # Stop the instance's controller thread
+        event.set() 
+        
+        # Delete instance information
+        self.remove_instance(monitor)
+
     def new_instance(self) -> Error: 
         if self.instances >= self.MAX_INSTANCES:
             print("Maximum number of instances reached, can't create more")
@@ -64,11 +94,15 @@ class Controller:
         # Create a monitor for the instance
         monitor = Monitor(instance)
 
+        self.pending_instances[instance.get_ip()] = instance
+        # ----- parariamos aca
         # Increase instance count
         self.instances += 1
 
         # Start deciding on the monitor data
-        decide = threading.Thread(target=self.decide, args=(monitor))
+        decide = threading.Thread(target=self.decide, args=(monitor)) 
+        # event = Event()
+        # decide = threading.Thread(target=self.decide, args=(monitor, event)) 
         decide.start()
 
         print(f"New instance created. Total instances: {self.instances}")
@@ -84,8 +118,10 @@ class Controller:
         # Delete the instance
         self.delete_instance(instance)
 
-        # Delete its monitor
+        # Delete all its related data
         del monitor
+        del instance
+        # del self.running_instance["ip"]
 
         # Decrease the instance count
         self.instances -= 1
@@ -93,10 +129,14 @@ class Controller:
         print(f"Deleted instance {ip}. Total instances: {self.instances}")
         return None
 
-    def manager(self, monitor):
+    def manager(self, monitor): #(self, monitor, event): # Este es si implementamos unregister
         while True:
             # Wait before executing
             sleep(self.INTERVAL)
+
+            # check for stop - Este es si implementamos unregister
+            # if event.is_set():
+            #     break
 
             # Check instance metric, ask for ping and metrics
             err = monitor.check()
