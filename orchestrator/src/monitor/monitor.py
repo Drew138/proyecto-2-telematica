@@ -1,4 +1,5 @@
 from orchestrator.src.common.instance import Instance
+from orchestrator.src.common.error import Error
 from orchestrator.src.client.client import Client
 import boto3
 
@@ -7,7 +8,7 @@ class Monitor:
     def __init__(self, instance: Instance):
         self.instance: Instance = instance
         self.metric: int = 0
-        self.grpc_client = = self.create_grpc_client()
+        self.grpc_client = self.create_grpc_client()
 
     # Public
     def get_metric(self) -> int:
@@ -31,50 +32,68 @@ class Monitor:
         # Now create the client
         return Client(instance_ip)
 
-    def ping(self) -> bool: # Error
-        # Check EC2 status with BOTO3
-        # Then ping with GRPC
-        # return False # Err
-        return False  # Done
+    def ping(self) -> Error: # Error
+        # Check if instance is running with boto3
+        # TODO:
 
-    def update_metric(self) -> bool: # Metric, Err
-        # return 0, True # Err
-        return False # Done 
+        # Check if GRPC conn is alive
+        err = self.grpc_client.is_alive()
+
+        if err:
+            return Err('GRPC connection not alive')
+        
+        self.grpc_client.Ping()
+
+        return None 
+
+    def update_metric(self) -> Error:
+        
+        # Check if GRPC conn is alive
+        err = self.grpc_client.is_alive()
+
+        if err:
+            return Err('GRPC connection not alive')
+
+        # Get the metric
+        new_metric = self.grpc_client.GetMetrics()
+
+        self.metric = new_metric
+
+        return None 
     
-    def try_function(self, function) -> bool:
+    def try_function(self, function) -> Error:
 
         def inner():
             tries = 1
             while True:
                 err = function()
 
-                if err == False: # Good ping
+                if not err: # Function returned no Errors
                     break
 
                 if err and tries < SELF.MAX_TRIES:
-                    sleep(self.INTERVAL) #TODO: definir otro intervalo de nuevo intento
+                    sleep(self.INTERVAL) # TODO: definir otro intervalo de nuevo intento
                     tries += 1
                 else:
-                    return False
-        
+                    return Error("Maximum connection tries exceeded")
+                
+            return None
+                
         return inner
 
 
-    def check(self) -> bool: # Err
-        # We try to ping some times 
-        # before saying the instace is down
-        
+    def check(self) -> Error: # Err
         err = self.try_function(self.ping)
 
         if err:
-            return False
+            return err
         
         err = self.try_function(self.update_metric())
 
         if err:
-            return False
+            return err
     
-        return True
+        return None
 
 
 

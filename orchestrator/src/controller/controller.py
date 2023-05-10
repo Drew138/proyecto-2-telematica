@@ -1,6 +1,7 @@
 import boto3
 from time import sleep
 from orchestrator.src.common import Instance
+from orchestrator.src.common.error import Error
 
 
 class Controller:
@@ -52,10 +53,10 @@ class Controller:
         )
     
     # Internal functions
-    def new_instance(self) -> bool: 
+    def new_instance(self) -> Error: 
         if self.instances >= self.MAX_INSTANCES:
             print("Maximum number of instances reached, can't create more")
-            return True
+            return Error("Max instances reached")
 
         # Create a new instace
         instance = self.create_instance()
@@ -71,14 +72,14 @@ class Controller:
         decide.start()
 
         print(f"New instance created. Total instances: {self.instances}")
-        return False
+        return None
 
-    def remove_instance(self, monitor: Monitor) -> bool:
+    def remove_instance(self, monitor: Monitor) -> Error:
         instance = monitor.get_instance()
 
         if self.instances <= self.MIN_INSTANCES:
             print("Minimum number of instances reached, can't delete more")
-            return True
+            return Error("Min instances reached")
 
         # Delete the instance
         self.delete_instance(instance)
@@ -90,7 +91,7 @@ class Controller:
         self.instances -= 1
 
         print(f"Deleted instance {ip}. Total instances: {self.instances}")
-        return False
+        return None
 
     def manager(self, monitor):
         while True:
@@ -113,7 +114,7 @@ class Controller:
             if metric > self.CREATE_METRIC:
                 err = self.new_instance()
             elif metric < self.DELETE_METRIC:
-                err =self.remove_instance(monitor)
+                err = self.remove_instance(monitor)
                 break
             else:
                 print(f"Node {ip}: Okay")

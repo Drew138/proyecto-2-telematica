@@ -1,7 +1,12 @@
 import grpc
 # from orchestrator.src.protobuf import monitor_pb2
-from orchestrator.src.protobuf import monitor_pb2_grpc
 from google.protobuf import empty_pb2
+from orchestrator.src.protobuf.monitor_pb2 import (
+    monitor_pb2_grpc,
+    PingResponse, 
+    MetricResponse, 
+    RegisterResponse,
+)
 
 
 class Client:
@@ -23,14 +28,18 @@ class Client:
 
         except grpc.RpcError as e:
             # An error occurred, so the connection is not alive
-            return False
+            return True
 
 
-    def Ping(self):
-        return self.stub.Ping(empty_pb2)
+    def Ping(self) -> bool:
+        ping_result = self.stub.Ping(empty_pb2)
+        return True
+
         
-    def GetMetrics(self):
-        return self.stub.GetMetrics(empty_pb2)
+    def GetMetrics(self) -> int:
+        metrics_result : MetricResponse = self.stub.GetMetrics(empty_pb2)
+        return int(metrics_result.message)
+
 
     def Register(self):
         return self.stub.Register(empty_pb2)
