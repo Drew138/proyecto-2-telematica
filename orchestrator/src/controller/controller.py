@@ -1,41 +1,37 @@
 import boto3
-from time import sleep
-from orchestrator.src.common import Instance
-from orchestrator.src.common.error import Error
 
 
 class Controller:
-    def __init__(self, ENV_VARS, config):
-        # Env
 
-        # self.CREATE_METRIC = 0  # TODO
-        # self.DELETE_METRIC = 0  # TODO
-        # self.MAX_INSTANCES = 0  # TODO
-        # self.MIN_INSTANCES = 0  # TODO
-        # self.INTERVAL
+    instances: int = 0
 
-        # Self
-        self.instances = 0
+    def __init__(self, config: dict) -> None:
 
         self.instance_policy_config = config["instance_policy_config"]
-        self.auth_config = config["auth_config"]
         self.instance_config = config["instance_config"]
-        self._set_ec2_client()
+        self._set_ec2_client(config["auth_config"])
 
-        self.pending_instances = {}
+    @classmethod
+    def increase_instances(cls) -> None:
+        cls.instances += 1
 
+    @classmethod
+    def decrease_instances(cls) -> None:
+        cls.instances -= 1
 
-    # AWS functions
-    def _set_ec2_client(self):
-        self.ec2_client = boto3.client(
+    @classmethod
+    def _set_ec2_client(cls, instance_config: dict) -> None:
+        if cls.ec2_client is not None:
+            return
+        cls.ec2_client = boto3.client(
             'ec2',
-            aws_access_key_id=self.instance_config["aws_access_key_id"],
-            aws_secret_access_key=self.instance_config["aws_secret_access_key"],
-            aws_session_token=self.instance_config["aws_session_token"],
-            region_name=self.instance_config["region_name"],
+            aws_access_key_id=instance_config["aws_access_key_id"],
+            aws_secret_access_key=instance_config["aws_secret_access_key"],
+            aws_session_token=instance_config["aws_session_token"],
+            region_name=instance_config["region_name"],
         )
 
-    def create_instance(self) -> Instance:
+    def create_instance(self) -> tuple[str, str]:
         response = self.ec2_client.run_instances(
             ImageId=self.instance_config["ami_id"],
             InstanceType=self.instance_config["instance_type"],
@@ -47,116 +43,11 @@ class Controller:
         instance = response['Instances'][0]
         instance_id = instance['InstanceId']
         instance_ip = instance['PrivateIpAddress']
-        return Instance(instance_id, instance_ip)
+        self.increase_instances()
+        return instance_id, instance_ip
 
-    def delete_instance(self, instance: Instance):
+    def delete_instance(self, instance_id: str) -> None:
         response = self.ec2_client.terminate_instances(
-            InstanceIds=[instance.id]
+            InstanceIds=[instance_id]
         )
-    
-    # Internal functions
-    def start_instance(self, ip: str) -> Error:
-        # Funcion propuesta para que sea llamada por register 
-        # Inicia la instancia desde los pending instances
-        instancia = self.pending_instances[ip]
-        del self.pending_instances[ip]
-
-        # Create a monitor for the instance
-        monitor = Monitor(instance)
-
-        # Increase instance count
-        self.instances += 1
-
-        # Start deciding on the monitor data
-        decide = threading.Thread(target=self.decide, args=(monitor))
-        decide.start()
-
-        print(f"New instance created. Total instances: {self.instances}")
-
-    def stop_instance(self, ip):
-        # Get the event for the instance
-        monitor, event = self.running_instances[ip] 
-
-        # Stop the instance's controller thread
-        event.set() 
-        
-        # Delete instance information
-        self.remove_instance(monitor)
-
-    def new_instance(self) -> Error: 
-        if self.instances >= self.MAX_INSTANCES:
-            print("Maximum number of instances reached, can't create more")
-            return Error("Max instances reached")
-
-        # Create a new instace
-        instance = self.create_instance()
-
-        # Create a monitor for the instance
-        monitor = Monitor(instance)
-
-        self.pending_instances[instance.get_ip()] = instance
-        # ----- parariamos aca
-        # Increase instance count
-        self.instances += 1
-
-        # Start deciding on the monitor data
-        decide = threading.Thread(target=self.decide, args=(monitor)) 
-        # event = Event()
-        # decide = threading.Thread(target=self.decide, args=(monitor, event)) 
-        decide.start()
-
-        print(f"New instance created. Total instances: {self.instances}")
-        return None
-
-    def remove_instance(self, monitor: Monitor) -> Error:
-        instance = monitor.get_instance()
-
-        if self.instances <= self.MIN_INSTANCES:
-            print("Minimum number of instances reached, can't delete more")
-            return Error("Min instances reached")
-
-        # Delete the instance
-        self.delete_instance(instance)
-
-        # Delete all its related data
-        del monitor
-        del instance
-        # del self.running_instance["ip"]
-
-        # Decrease the instance count
-        self.instances -= 1
-
-        print(f"Deleted instance {ip}. Total instances: {self.instances}")
-        return None
-
-    def manager(self, monitor): #(self, monitor, event): # Este es si implementamos unregister
-        while True:
-            # Wait before executing
-            sleep(self.INTERVAL)
-
-            # check for stop - Este es si implementamos unregister
-            # if event.is_set():
-            #     break
-
-            # Check instance metric, ask for ping and metrics
-            err = monitor.check()
-
-            # Error: Intentamos pingear varias veces sin exito
-            # Instancia caida
-            if err:
-                self.remove_instance(monitor)
-                break
-
-            metric = monitor.get_metric()
-            ip = monitor.get_instance().get_ip()
-            
-            result = ""
-            if metric > self.CREATE_METRIC:
-                err = self.new_instance()
-            elif metric < self.DELETE_METRIC:
-                err = self.remove_instance(monitor)
-                break
-            else:
-                print(f"Node {ip}: Okay")
-                
-            
+        self.decrease_instances()

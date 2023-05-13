@@ -1,93 +1,39 @@
+from instance.src.protobuf.monitor_pb2 import MetricResponse
 from orchestrator.src.common.instance import Instance
-from orchestrator.src.common.error import Error
 from orchestrator.src.client.client import Client
-import boto3
 
 
 class Monitor:
-    def __init__(self, instance: Instance):
+    def __init__(self, instance: Instance) -> None:
         self.instance: Instance = instance
-        self.metric: int = 0
-        self.grpc_client = self.create_grpc_client()
+        self.client: Client = self._create_client()
 
-    # Public
     def get_metric(self) -> int:
         return self.metric
-    
+
     def get_instance(self) -> Instance:
-        return self.instace
-    
-    # Internal
-    def create_grpc_client(self):
-        instance_id = self.instace.get_id()
-        instance_ip = self.instace.get_ip()
+        return self.instance
 
-        # Now create the client
-        return Client(instance_ip)
+    def _create_client(self) -> Client:
+        return Client(self.instance.get_socket())
 
-    def ping(self) -> Error: # Error
-        # Check if instance is running with boto3
-        # TODO:
-
-        # Check if GRPC conn is alive
-        err = self.grpc_client.is_alive()
-
-        if err:
-            return Err('GRPC connection not alive')
-        
-        self.grpc_client.Ping()
-
-        return None 
-
-    def update_metric(self) -> Error:
-        
-        # Check if GRPC conn is alive
-        err = self.grpc_client.is_alive()
-
-        if err:
-            return Err('GRPC connection not alive')
-
-        # Get the metric
-        new_metric = self.grpc_client.GetMetrics()
-
-        self.metric = new_metric
-
-        return None 
-    
-    def try_function(self, function) -> Error:
-
-        def inner():
-            tries = 1
-            while True:
-                err = function()
-
-                if not err: # Function returned no Errors
-                    break
-
-                if err and tries < SELF.MAX_TRIES:
-                    sleep(self.INTERVAL) # TODO: definir otro intervalo de nuevo intento
-                    tries += 1
-                else:
-                    return Error("Maximum connection tries exceeded")
-                
-            return None
-                
+    @staticmethod
+    def safe_grpc_call(function):
+        def inner(self, *args, **kwargs):
+            try:
+                return function(self, *args, **kwargs)
+            except Exception:
+                return self.get_instance().kill()
         return inner
 
+    @safe_grpc_call
+    def ping(self) -> None:
+        self.client.monitor_stub.Ping()
 
-    def check(self) -> Error: # Err
-        err = self.try_function(self.ping)
+    @safe_grpc_call
+    def update_metric(self) -> None:
+        metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
+        self.metric: int = metric_response.message
 
-        if err:
-            return err
-        
-        err = self.try_function(self.update_metric())
-
-        if err:
-            return err
-    
-        return None
-
-
-
-        
+    def application_failed_to_start(self) -> bool:
+        return self.client.failed_to_start

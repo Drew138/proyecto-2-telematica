@@ -1,48 +1,23 @@
+from protobuf.monitor_pb2_grpc import MonitorServiceStub
 import grpc
-# from orchestrator.src.protobuf import monitor_pb2
-from google.protobuf import empty_pb2
-from orchestrator.src.protobuf.monitor_pb2 import (
-    monitor_pb2_grpc,
-    PingResponse, 
-    MetricResponse, 
-    RegisterResponse,
-)
+import time
 
 
 class Client:
 
-    def __init__(self, address):
-        channel = grpc.insecure_channel(address)
-        self.stub = monitor_pb2_grpc.MonitorServiceStub(channel)
+    def __init__(self, socket: str) -> None:
+        self.failed_to_start: bool = False
+        self.start(socket)
 
-    def is_alive(self):
-        try:
-            # Get the underlying channel object
-            channel = stub.channel()
+    def start(self, socket: str) -> None:
+        for _ in range(10):
+            try:
+                channel: grpc.Channel = grpc.insecure_channel(socket)
+                self.monitor_stub: MonitorServiceStub = MonitorServiceStub(
+                    channel)
+                self.monitor_stub.Ping()
+                return
+            finally:
+                time.sleep(10)
 
-            # Check the connection state
-            state = channel.state()
-
-            # Return True if the connection is ready, False otherwise
-            return state == grpc.ChannelConnectivity.READY
-
-        except grpc.RpcError as e:
-            # An error occurred, so the connection is not alive
-            return True
-
-
-    def Ping(self) -> bool:
-        ping_result = self.stub.Ping(empty_pb2)
-        return True
-
-        
-    def GetMetrics(self) -> int:
-        metrics_result : MetricResponse = self.stub.GetMetrics(empty_pb2)
-        return int(metrics_result.message)
-
-
-    def Register(self):
-        return self.stub.Register(empty_pb2)
-
-    def Unregister(self):
-        return self.stub.Unregister(empty_pb2)
+        self.failed_to_start: bool = True

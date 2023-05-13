@@ -1,9 +1,9 @@
 {
-  "instance_policy_config": {
+  "policy_config": {
     "max_instances": 5,
     "min_instances": 2,
     "delete_policy": 10,
-    "creation_policy": 80
+    "create_policy": 80
   },
   "auth_config": {
     "aws_access_key_id": "",
@@ -15,6 +15,7 @@
     "ami_id": "",
     "security_group_ids": [""],
     "instance_type": "t2.micro",
-    "key_pair_name": "vockey"
+    "key_pair_name": "vockey",
+    "port": 80
   }
 }

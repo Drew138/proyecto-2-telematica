@@ -1,16 +1,11 @@
-from .config import Config
+from config.config import Config
+from orchestrator.src.common.instance import Instance
 
 
+def main() -> None:
+    config: dict = Config.create('./config.json')
+    Instance.new(config)
 
-def main():
-    # Load the config
-    config = Config('./config.json')
 
-    # Vars
-        # max_instances = config.max_instances
-        # min_instances = config.min_instances
-        # delete_policy = config.delete_policy
-        # creation_policy = config.creation_policy
-    
-    
-
+if __name__ == '__main__':
+    main()
