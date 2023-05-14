@@ -1,19 +1,17 @@
 import grpc
 import futures
-from instance.src.handler.handler import MonitorServiceServicer
-from instance.src.protobuf.monitor_pb2 import (
-    monitor_pb2_grpc,
-)
+from instance.src.protobuf import monitor_pb2_grpc
+
 
 class Server:
-    def __init__(self, _handler):
-        self.HANDLER = _handler
-        self.PORT = 20 # TODO: READ
-    
-    def start(self):
+    def __init__(self, service, port) -> None:
+        self.service = service
+        self.port = port
+
+    def start(self) -> None:
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-        monitor_pb2_grpc.add_RouteGuideServicer_to_server(
-            self.HANDLER, server)
-        server.add_insecure_port(f'[::]:{self.PORT}')
+        monitor_pb2_grpc.add_MonitorServiceServicer_to_server(
+            self.service, server)
+        server.add_insecure_port(f'[::]:{self.port}')
         server.start()
         server.wait_for_termination()

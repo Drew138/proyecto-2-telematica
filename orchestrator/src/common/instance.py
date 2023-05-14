@@ -5,6 +5,10 @@ import time
 
 
 class Instance:
+
+    instance_list = []
+    lock = threading.Lock()
+
     def __init__(self, config: dict) -> None:
         self.is_alive: bool = True
         self.port: int = config['instance_config']['port']
@@ -15,7 +19,21 @@ class Instance:
 
     @classmethod
     def new(cls, config) -> None:
-        cls(config)
+        cls.instance_list.append(cls(config))
+
+    @classmethod
+    def remove_instance(cls, id) -> None:
+        cls.lock.acquire()
+        new_list: list[cls] = []
+
+        for instance in cls.instance_list:
+            if instance.id == id:
+                instance.kill()
+            else:
+                new_list.append(instance)
+
+        cls.instance_list: list[cls] = new_list
+        cls.lock.release()
 
     def create_controller(self) -> Controller:
         controller: Controller = Controller(self.config)
@@ -59,7 +77,7 @@ class Instance:
         if Controller.instances > self.config['policy_config']['min_instances']:
             return
 
-        self.kill()
+        self.remove_instance(self.id)
 
     def check_creation(self, metric: int) -> None:
         if metric >= self.config['policy_config']['create_policy']:

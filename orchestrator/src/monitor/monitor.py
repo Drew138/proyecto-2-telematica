@@ -20,10 +20,14 @@ class Monitor:
     @staticmethod
     def safe_grpc_call(function):
         def inner(self, *args, **kwargs):
-            try:
-                return function(self, *args, **kwargs)
-            except Exception:
-                return self.get_instance().kill()
+            for _ in range(5):
+                try:
+                    return_value = function(self, *args, **kwargs)
+                    return return_value
+                except Exception:
+                    pass
+            instance = self.get_instance()
+            return instance.remove_instance(instance.id)
         return inner
 
     @safe_grpc_call

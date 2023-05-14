@@ -6,8 +6,6 @@ class Controller:
     instances: int = 0
 
     def __init__(self, config: dict) -> None:
-
-        self.instance_policy_config = config["instance_policy_config"]
         self.instance_config = config["instance_config"]
         self._set_ec2_client(config["auth_config"])
 
@@ -20,15 +18,15 @@ class Controller:
         cls.instances -= 1
 
     @classmethod
-    def _set_ec2_client(cls, instance_config: dict) -> None:
+    def _set_ec2_client(cls, auth_config: dict) -> None:
         if cls.ec2_client is not None:
             return
         cls.ec2_client = boto3.client(
             'ec2',
-            aws_access_key_id=instance_config["aws_access_key_id"],
-            aws_secret_access_key=instance_config["aws_secret_access_key"],
-            aws_session_token=instance_config["aws_session_token"],
-            region_name=instance_config["region_name"],
+            aws_access_key_id=auth_config["aws_access_key_id"],
+            aws_secret_access_key=auth_config["aws_secret_access_key"],
+            aws_session_token=auth_config["aws_session_token"],
+            region_name=auth_config["region_name"],
         )
 
     def create_instance(self) -> tuple[str, str]:
