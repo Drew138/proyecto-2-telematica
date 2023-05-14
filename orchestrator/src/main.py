@@ -1,4 +1,4 @@
-from orchestrator.src.common.instance import Instance
+from orchestrator.src.instance.instance import Instance
 from config.config import Config
 from flask import Flask
 import threading
@@ -22,7 +22,8 @@ def kill(id) -> str:
 
 def main() -> None:
     threading.Thread(target=app.run).start()
-    Instance.new(config)
+    for _ in range(config['policy_config']['min_instances']):
+        threading.Thread(target=Instance.new, args=[config]).start()
 
 
 if __name__ == '__main__':

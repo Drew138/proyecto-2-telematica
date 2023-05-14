@@ -6,8 +6,13 @@ class Controller:
     instances: int = 0
 
     def __init__(self, config: dict) -> None:
+        ip = 'imgaye'
         self.instance_config = config["instance_config"]
         self._set_ec2_client(config["auth_config"])
+        self. user_data = \
+            "#!/bin/bash\n"
+        f"export ORCHESTRATOR_IP={ip}\n"
+        "classmethod"
 
     @classmethod
     def increase_instances(cls) -> None:
@@ -32,6 +37,7 @@ class Controller:
     def create_instance(self) -> tuple[str, str]:
         response = self.ec2_client.run_instances(
             ImageId=self.instance_config["ami_id"],
+            UserData=self.user_data,
             InstanceType=self.instance_config["instance_type"],
             KeyName=self.instance_config["key_pair_name"],
             SecurityGroupIds=self.instance_config["security_group_id"],
@@ -45,7 +51,7 @@ class Controller:
         return instance_id, instance_ip
 
     def delete_instance(self, instance_id: str) -> None:
-        response = self.ec2_client.terminate_instances(
+        self.ec2_client.terminate_instances(
             InstanceIds=[instance_id]
         )
         self.decrease_instances()

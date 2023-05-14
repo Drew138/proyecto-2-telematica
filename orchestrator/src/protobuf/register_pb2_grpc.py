@@ -3,10 +3,10 @@
 import grpc
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-import monitor_pb2 as monitor__pb2
+import register_pb2 as register__pb2
 
 
-class MonitorServiceStub(object):
+class RegisterServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -15,58 +15,58 @@ class MonitorServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.Ping = channel.unary_unary(
-                '/MonitorService/Ping',
+        self.Register = channel.unary_unary(
+                '/RegisterService/Register',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=monitor__pb2.PingResponse.FromString,
+                response_deserializer=register__pb2.RegisterResponse.FromString,
                 )
-        self.GetMetrics = channel.unary_unary(
-                '/MonitorService/GetMetrics',
+        self.Unregister = channel.unary_unary(
+                '/RegisterService/Unregister',
                 request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-                response_deserializer=monitor__pb2.MetricResponse.FromString,
+                response_deserializer=register__pb2.UnregisterResponse.FromString,
                 )
 
 
-class MonitorServiceServicer(object):
+class RegisterServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def Ping(self, request, context):
+    def Register(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetMetrics(self, request, context):
+    def Unregister(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_MonitorServiceServicer_to_server(servicer, server):
+def add_RegisterServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Ping': grpc.unary_unary_rpc_method_handler(
-                    servicer.Ping,
+            'Register': grpc.unary_unary_rpc_method_handler(
+                    servicer.Register,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=monitor__pb2.PingResponse.SerializeToString,
+                    response_serializer=register__pb2.RegisterResponse.SerializeToString,
             ),
-            'GetMetrics': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetMetrics,
+            'Unregister': grpc.unary_unary_rpc_method_handler(
+                    servicer.Unregister,
                     request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                    response_serializer=monitor__pb2.MetricResponse.SerializeToString,
+                    response_serializer=register__pb2.UnregisterResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'MonitorService', rpc_method_handlers)
+            'RegisterService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class MonitorService(object):
+class RegisterService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def Ping(request,
+    def Register(request,
             target,
             options=(),
             channel_credentials=None,
@@ -76,14 +76,14 @@ class MonitorService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/MonitorService/Ping',
+        return grpc.experimental.unary_unary(request, target, '/RegisterService/Register',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            monitor__pb2.PingResponse.FromString,
+            register__pb2.RegisterResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetMetrics(request,
+    def Unregister(request,
             target,
             options=(),
             channel_credentials=None,
@@ -93,8 +93,8 @@ class MonitorService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/MonitorService/GetMetrics',
+        return grpc.experimental.unary_unary(request, target, '/RegisterService/Unregister',
             google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            monitor__pb2.MetricResponse.FromString,
+            register__pb2.UnregisterResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

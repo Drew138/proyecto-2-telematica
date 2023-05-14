@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rmonitor.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1f\n\x0cPingResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"!\n\x0eMetricResponse\x12\x0f\n\x07message\x18\x01 \x01(\x05\"#\n\x10RegisterResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"%\n\x12UnregisterResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2\xf0\x01\n\x0eMonitorService\x12/\n\x04Ping\x12\x16.google.protobuf.Empty\x1a\r.PingResponse\"\x00\x12\x37\n\nGetMetrics\x12\x16.google.protobuf.Empty\x1a\x0f.MetricResponse\"\x00\x12\x37\n\x08Register\x12\x16.google.protobuf.Empty\x1a\x11.RegisterResponse\"\x00\x12;\n\nUnregister\x12\x16.google.protobuf.Empty\x1a\x13.UnregisterResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rmonitor.proto\x1a\x1bgoogle/protobuf/empty.proto\"\x1f\n\x0cPingResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"!\n\x0eMetricResponse\x12\x0f\n\x07message\x18\x01 \x01(\x05\x32z\n\x0eMonitorService\x12/\n\x04Ping\x12\x16.google.protobuf.Empty\x1a\r.PingResponse\"\x00\x12\x37\n\nGetMetrics\x12\x16.google.protobuf.Empty\x1a\x0f.MetricResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'monitor_pb2', globals())
@@ -25,10 +25,6 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _PINGRESPONSE._serialized_end=77
   _METRICRESPONSE._serialized_start=79
   _METRICRESPONSE._serialized_end=112
-  _REGISTERRESPONSE._serialized_start=114
-  _REGISTERRESPONSE._serialized_end=149
-  _UNREGISTERRESPONSE._serialized_start=151
-  _UNREGISTERRESPONSE._serialized_end=188
-  _MONITORSERVICE._serialized_start=191
-  _MONITORSERVICE._serialized_end=431
+  _MONITORSERVICE._serialized_start=114
+  _MONITORSERVICE._serialized_end=236
 # @@protoc_insertion_point(module_scope)

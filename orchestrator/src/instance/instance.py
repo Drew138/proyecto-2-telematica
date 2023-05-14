@@ -29,6 +29,7 @@ class Instance:
         for instance in cls.instance_list:
             if instance.id == id:
                 instance.kill()
+                instance.controller.delete_instance(instance.id)
             else:
                 new_list.append(instance)
 
@@ -43,7 +44,7 @@ class Instance:
     def create_monitor(self) -> Monitor:
         monitor = Monitor(self)
         if monitor.application_failed_to_start():
-            self.kill()
+            self.remove_instance(self.id)
         return monitor
 
     def kill(self) -> None:
@@ -60,7 +61,6 @@ class Instance:
         while self.is_alive:
             self.monitor.ping()
             time.sleep(1)
-        self.controller.delete_instance(self.id)
 
     def watch_metric(self) -> None:
         while self.is_alive:

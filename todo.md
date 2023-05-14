@@ -1,4 +1,12 @@
 
+
+
+# FALTA
+- IMPEMENTAR REGISTER
+- IMPLEMENTAR UNREGISTER
+
+
+
 Orquestador
     Controller
     1. Crear nodo: 
@@ -30,10 +38,6 @@ Nodo
 # EXTRAS
 - DEFINIR API PARA CREAR Y BORRAR INSTANCIAS
 - DEVOLVER CODIGOS DE OKAY O ERROR EN GRPC
-
-
-
-
 
 
 

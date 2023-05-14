@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+message RegisterResponse {
+    string message = 1;
+}
+
+message UnregisterResponse {
+    string message = 1;
+}
+
+service RegisterService {
+  rpc Register(google.protobuf.Empty) returns (RegisterResponse) {};
+  rpc Unregister(google.protobuf.Empty) returns (UnregisterResponse) {};
+}
