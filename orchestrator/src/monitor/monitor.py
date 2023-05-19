@@ -35,8 +35,8 @@ class Monitor:
                 metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
                 self.metric: int = metric_response.message
                 return
-            except Exception:
-                print("Error:",Exception, flush=True)
+            except Exception as e:
+                print("Error:",e, flush=True)
                 print("Error ocurrio en update metric", flush=True)
                 pass
         instance = self.get_instance()
