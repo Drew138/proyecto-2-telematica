@@ -11,14 +11,14 @@ class Client:
         self.start(socket)
 
     def start(self, socket: str) -> None:
-        for _ in range(10):
-            try:
-                channel: grpc.Channel = grpc.insecure_channel(socket)
-                self.monitor_stub: MonitorServiceStub = MonitorServiceStub(
-                    channel)
-                self.monitor_stub.Ping(empty_pb2.Empty())
-                return
-            finally:
-                time.sleep(10)
+        # for _ in range(10):
+        try:
+            channel: grpc.Channel = grpc.insecure_channel(socket)
+            self.monitor_stub: MonitorServiceStub = MonitorServiceStub(
+                channel)
+            self.monitor_stub.Ping(empty_pb2.Empty())
+            return
+        finally:
+            time.sleep(10)
 
-        self.failed_to_start: bool = True
+            self.failed_to_start: bool = True

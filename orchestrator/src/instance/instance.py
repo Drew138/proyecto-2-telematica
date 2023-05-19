@@ -17,17 +17,17 @@ class Instance:
         self.controller: Controller = self.create_controller()
 
         self.sleep()
-        if self.is_alive:
-            self.monitor: Monitor = self.create_monitor()
-            self.start()
+            
 
     def sleep(self):
         for _ in range(10):
-            print("IN SLEEEP!!")
+            print("IN SLEEEP!!", flush=True)
             time.sleep(10)
             if not self.is_asleep:
+                self.monitor: Monitor = self.create_monitor()
+                self.start()
                 return
-        print("KILLED INSTANCE")
+        print("KILLED INSTANCE", flush=True)
         self.remove_instance(self.id)
 
     @classmethod
