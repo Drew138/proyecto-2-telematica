@@ -32,7 +32,7 @@ class Monitor:
     def update_metric(self) -> None:
         for _ in range(5):
             try:
-                metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
+                metric_response: MetricResponse = self.client.monitor_stub.GetMetrics(empty_pb2.Empty())
                 self.metric: int = metric_response.message
                 return
             except Exception as e:
