@@ -11,6 +11,8 @@ class Controller:
         self._set_ec2_client(config["auth_config"])
         self. user_data = \
             "#!/bin/bash\n"
+        "cd /home/ubuntu/proyecto-2-telematica/\n"
+        "git pull origin main\n"
         f"echo \"ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata --instance-id)\" | tr ' ' '\n' > /home/ubuntu/proyecto-2-telematica/.env\n"
         "sudo docker-compose -f /home/ubuntu/proyecto-2-telematica/docker-compose.instance.yml up -d"
     
