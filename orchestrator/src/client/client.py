@@ -19,6 +19,7 @@ class Client:
             self.monitor_stub.Ping(empty_pb2.Empty())
             return
         except grpc.RpcError as rpc_error:
+            print("Failed to connect in create client", flush=True)
             self.failed_to_start: bool = True
         finally:
             time.sleep(10)
