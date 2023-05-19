@@ -28,15 +28,17 @@ def main() -> None:
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
     threading.Thread(target=app.run, kwargs=kwargs).start()
 
+    register_service = RegisterServiceServicer()
+    grpc_port = os.getenv('GRPC_PORT')
+    server = Server(register_service, grpc_port)
+    threading.Thread(target=server.start).start()
+
     # for _ in range(config['policy_config']['min_instances']):
     #     threading.Thread(target=Instance.new, args=[config]).start()
 
     inst = Instance(config)
 
-    # register_service = RegisterServiceServicer()
-    # grpc_port = os.getenv('GRPC_PORT')
-    # server = Server(register_service, grpc_port)
-    # server.start()
+    
 
 if __name__ == '__main__':
     main()
