@@ -101,20 +101,20 @@ class Instance:
         print("Metric", metric, flush=True)
         print("Delete policy", self.config['policy_config']['delete_policy'], flush=True)
         print("Number of current instances",Controller.instances, flush=True)
-        print("Policy min instances", self.config['policy_config']['delete_policy'], flush=True)
-        if metric <= self.config['policy_config']['delete_policy']:
+        print("Policy min instances", self.config['policy_config']['min_instances'], flush=True)
+        if metric >= self.config['policy_config']['delete_policy']:
             return
 
-        if Controller.instances > self.config['policy_config']['min_instances']:
+        if Controller.instances <= self.config['policy_config']['min_instances']:
             return
         print("check termination failed, deleting", flush=True)
         self.remove_instance(self.id)
 
     def check_creation(self, metric: int) -> None:
-        if metric >= self.config['policy_config']['create_policy']:
+        if metric <= self.config['policy_config']['create_policy']:
             return
 
-        if Controller.instances < self.config['policy_config']['max_instances']:
+        if Controller.instances >= self.config['policy_config']['max_instances']:
             return
 
         threading.Thread(target=Instance, args=[self.config]).start()
