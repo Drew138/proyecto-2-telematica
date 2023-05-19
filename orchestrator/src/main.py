@@ -7,6 +7,8 @@ import concurrent
 import threading
 import os
 
+thread_pool_ref = concurrent.futures.ThreadPoolExecutor
+
 app: Flask = Flask(__name__)
 
 config: dict = Config.create('./src/config.json')
@@ -25,7 +27,7 @@ def kill(id) -> str:
 
 
 def main() -> None:
-    thread_pool_ref = concurrent.futures.ThreadPoolExecutor
+
 
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
