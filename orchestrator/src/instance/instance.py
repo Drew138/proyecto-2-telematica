@@ -22,15 +22,15 @@ class Instance:
             
 
     def sleep(self):
-        print(f"Iniciando espera de registro para IP={self.ip}", flush=True)
+        print(f"----> Iniciando espera de registro para IP={self.ip}", flush=True)
         for _ in range(20):
             time.sleep(10)
             if not self.is_asleep:
-                print(f"Instancia con IP={self.ip} se registro, iniciamos su monitoreo", flush=True)
+                print(f"--------> Instancia con IP={self.ip} se registro, iniciamos su monitoreo", flush=True)
                 self.monitor: Monitor = self.create_monitor()
                 self.start()
                 return
-        print("Instancia no se registro en el tiempo dado, eliminando", flush=True)
+        print("--------> Instancia no se registro en el tiempo dado, eliminando", flush=True)
         Instance.remove_instance(self.id)
 
     @classmethod
@@ -85,15 +85,20 @@ class Instance:
 
     def watch_metric(self) -> None:
         while self.is_alive:
+            print("======================", flush=True)
+            print("======================", flush=True)
             print("Comienza analisis de metricas para ip", self.ip, flush=True)
             self.monitor.update_metric()
             metric: int = self.monitor.get_metric()
             print(f"----> Metrica consultada actualmente para instancia con ip {self.ip}:",metric, flush=True)
             self.check_termination(metric)
             self.check_creation(metric)
-            time.sleep(20)
+            print("======================", flush=True)
+            print("======================", flush=True)
+            time.sleep(30)
 
     def check_termination(self, metric: int) -> None:
+        print("----------------------", flush=True)
         print(f"Comienza check para terminar instancia | Revisando a `{self.ip}`", flush=True)
         print(f"----> La metrica minima es {self.config['policy_config']['delete_policy']} y la actual es {metric}", flush=True)
         print(f"----> El minimo numero de instancias es {self.config['policy_config']['min_instances']} y la actual {Controller.instances}", flush=True)
@@ -107,10 +112,11 @@ class Instance:
             print(f"--------> La instancia NO cumple con el minimo de metrica PERO llegamos al minimo de instancias", flush=True)
             return
         
-        print("--------> Borrando instancia con ip {self.ip}", flush=True)
+        print(f"--------> Borrando instancia con ip {self.ip}", flush=True)
         self.remove_instance(self.id)
 
     def check_creation(self, metric: int) -> None:
+        print("----------------------", flush=True)
         print(f"Comienza check para crear nueva instancia | Revisando a `{self.ip}`", flush=True)
         print(f"----> La metrica maxima es {self.config['policy_config']['delete_policy']} y la actual es {metric}", flush=True)
         print(f"----> El maximo numero de instancias es {self.config['policy_config']['min_instances']} y la actual {Controller.instances}", flush=True)
@@ -122,5 +128,5 @@ class Instance:
         if Controller.instances >= self.config['policy_config']['max_instances']:
             print(f"--------> La instancia NO cumple con el maximo de metrica PERO llegamos al maximo de instancias", flush=True)
             return
-        print("--------> Creando nueva instancia debido a que la intancia con ip {self.ip} sobrepasa condiciones requeridas", flush=True)
+        print(f"--------> Creando nueva instancia debido a que la intancia con ip {self.ip} sobrepasa condiciones requeridas", flush=True)
         threading.Thread(target=Instance, args=[self.config]).start()
