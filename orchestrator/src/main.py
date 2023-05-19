@@ -34,7 +34,7 @@ def main() -> None:
     threading.Thread(target=server.start).start()
 
     for _ in range(config['policy_config']['min_instances']):
-        threading.Thread(target=Instance.new, args=[config]).start()
+        threading.Thread(target=Instance, args=[config]).start()
 
     #inst = Instance(config)
 
