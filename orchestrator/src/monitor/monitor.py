@@ -1,8 +1,12 @@
 from protobuf.monitor_pb2 import MetricResponse
 from client.client import Client
 from google.protobuf import empty_pb2
+import threading
+
+
 
 class Monitor:
+    lock = threading.Lock()
     def __init__(self, instance) -> None:
         self.instance = instance
         self.client: Client = self._create_client()
@@ -15,7 +19,10 @@ class Monitor:
         return self.instance
 
     def _create_client(self) -> Client:
-        return Client(self.instance.get_socket())
+        self.lock.acquire()
+        c = Client(self.instance.get_socket())
+        self.lock.release()
+        return c
 
     def ping(self) -> None:
         for _ in range(5):
