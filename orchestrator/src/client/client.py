@@ -13,6 +13,7 @@ class Client:
     def start(self, socket: str) -> None:
         # for _ in range(10):
         try:
+            print("SOCKET", socket, flush=True)
             channel: grpc.Channel = grpc.insecure_channel(socket)
             self.monitor_stub: MonitorServiceStub = MonitorServiceStub(
                 channel)
