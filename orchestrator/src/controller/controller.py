@@ -6,7 +6,7 @@ class Controller:
     instances: int = 0
 
     def __init__(self, config: dict) -> None:
-        ip = config['orchestrator_ip']['ip_address']
+        ip = config['orchestrator_config']['ip_address']
         self.instance_config = config["instance_config"]
         self._set_ec2_client(config["auth_config"])
         self. user_data = \
@@ -24,7 +24,7 @@ class Controller:
 
     @classmethod
     def _set_ec2_client(cls, auth_config: dict) -> None:
-        if cls.ec2_client is not None:
+        if hasattr(cls, 'ec2_client'):
             return
         cls.ec2_client = boto3.client(
             'ec2',
@@ -40,7 +40,7 @@ class Controller:
             UserData=self.user_data,
             InstanceType=self.instance_config["instance_type"],
             KeyName=self.instance_config["key_pair_name"],
-            SecurityGroupIds=self.instance_config["security_group_id"],
+            SecurityGroupIds=self.instance_config["security_group_ids"],
             MinCount=1,
             MaxCount=1
         )

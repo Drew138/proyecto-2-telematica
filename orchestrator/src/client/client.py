@@ -1,6 +1,7 @@
 from protobuf.monitor_pb2_grpc import MonitorServiceStub
 import grpc
 import time
+from google.protobuf import empty_pb2
 
 
 class Client:
@@ -15,7 +16,7 @@ class Client:
                 channel: grpc.Channel = grpc.insecure_channel(socket)
                 self.monitor_stub: MonitorServiceStub = MonitorServiceStub(
                     channel)
-                self.monitor_stub.Ping()
+                self.monitor_stub.Ping(empty_pb2.Empty())
                 return
             finally:
                 time.sleep(10)

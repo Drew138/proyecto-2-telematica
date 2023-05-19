@@ -23,9 +23,11 @@ class Instance:
 
     def sleep(self):
         for _ in range(10):
+            print("IN SLEEEP!!")
             time.sleep(10)
             if not self.is_asleep:
                 return
+        print("KILLED INSTANCE")
         self.remove_instance(self.id)
 
     @classmethod

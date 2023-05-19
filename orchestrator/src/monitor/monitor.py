@@ -1,6 +1,6 @@
 from protobuf.monitor_pb2 import MetricResponse
 from client.client import Client
-
+from google.protobuf import empty_pb2
 
 class Monitor:
     def __init__(self, instance) -> None:
@@ -16,25 +16,26 @@ class Monitor:
     def _create_client(self) -> Client:
         return Client(self.instance.get_socket())
 
-    # @staticmethod
-    # def safe_grpc_call(function):
-    #     def inner(self, *args, **kwargs):
-    #         for _ in range(5):
-    #             try:
-    #                 return_value = function(self, *args, **kwargs)
-    #                 return return_value
-    #             except Exception:
-    #                 pass
-    #         instance = self.get_instance()
-    #         return instance.remove_instance(instance.id)
-    #     return inner
-
     def ping(self) -> None:
-        self.client.monitor_stub.Ping()
+        for _ in range(5):
+            try:
+                return_value = self.client.monitor_stub.Ping(empty_pb2.Empty())
+                return return_value
+            except Exception:
+                pass
+        instance = self.get_instance()
+        return instance.remove_instance(instance.id)
 
     def update_metric(self) -> None:
-        metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
-        self.metric: int = metric_response.message
+        for _ in range(5):
+            try:
+                metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
+                self.metric: int = metric_response.message
+                return
+            except Exception:
+                pass
+        instance = self.get_instance()
+        return instance.remove_instance(instance.id)
 
     def application_failed_to_start(self) -> bool:
         return self.client.failed_to_start
