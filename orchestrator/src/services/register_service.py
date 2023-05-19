@@ -5,7 +5,7 @@ from protobuf.register_pb2 import (
 )
 
 from instance.instance import Instance
-from src.protobuf import register_pb2_grpc
+from protobuf import register_pb2_grpc
 
 
 class RegisterServiceServicer(register_pb2_grpc.RegisterServiceServicer):
