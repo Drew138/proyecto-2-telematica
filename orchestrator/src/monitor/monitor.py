@@ -22,29 +22,33 @@ class Monitor:
         return c
 
     def ping(self) -> None:
+        instance = self.get_instance()
+        print(f"Intentando pingear a IP={instance.ip}")
         for _ in range(5):
             try:
                 return_value = self.client.monitor_stub.Ping(empty_pb2.Empty())
                 return return_value
             except Exception:
+                print("Error ocurrio en ping", flush=True)
                 pass
-        instance = self.get_instance()
-        print("Calling remove from ping in monitor", flush=True)
+        
+        print(f"Fallo Pingeando a IP={instance.ip}.\nEliminando instancia", flush=True)
         instance.remove_instance(instance.id)
         return 
 
     def update_metric(self) -> None:
+        instance = self.get_instance()
+        print(f"Intentando conseguir metrica de IP={instance.ip}")
         for _ in range(5):
             try:
                 metric_response: MetricResponse = self.client.monitor_stub.GetMetrics(empty_pb2.Empty())
                 self.metric: int = metric_response.message
                 return
             except Exception as e:
-                print("Error:",e, flush=True)
                 print("Error ocurrio en update metric", flush=True)
                 pass
-        instance = self.get_instance()
-        print("Borrando desde update metric", flush=True)
+        
+        print(f"Fallo conseguir metrica de IP={instance.ip}.\nEliminando instancia", flush=True)
         return instance.remove_instance(instance.id)
 
     def application_failed_to_start(self) -> bool:
