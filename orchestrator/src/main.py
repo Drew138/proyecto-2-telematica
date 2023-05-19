@@ -7,7 +7,7 @@ import concurrent
 import threading
 import os
 
-thread_pool_ref = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+
 
 app: Flask = Flask(__name__)
 
@@ -36,7 +36,7 @@ def main() -> None:
     register_service = RegisterServiceServicer()
     grpc_port = os.getenv('GRPC_PORT')
     server = Server(register_service, grpc_port)
-    threading.Thread(target=server.start, args=[thread_pool_ref]).start()
+    threading.Thread(target=server.start).start()
 
     for _ in range(config['policy_config']['min_instances']):
         t = threading.Thread(target=Instance, args=[config])

@@ -1,5 +1,5 @@
 import grpc
-import concurrent.futures as futures
+import concurrent
 from protobuf import (
     register_pb2_grpc
 )
@@ -10,10 +10,10 @@ class Server:
         self.service = service
         self.port = port
 
-    def start(self, executor) -> None:
+    def start(self) -> None:
         print("Starting server controller grpc", flush=True)
-     
-        server = grpc.server(executor)
+        thread_pool_ref = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+        server = grpc.server(thread_pool_ref)
         register_pb2_grpc.add_RegisterServiceServicer_to_server(
             self.service, server)
         server.add_insecure_port(f'0.0.0.0:{self.port}')
