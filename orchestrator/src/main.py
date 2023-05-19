@@ -1,7 +1,10 @@
+from orchestrator.src.services.register_service import RegisterServiceServicer
 from orchestrator.src.instance.instance import Instance
+from orchestrator.src.server.server import Server
 from config.config import Config
 from flask import Flask
 import threading
+import os
 
 app: Flask = Flask(__name__)
 
@@ -21,6 +24,15 @@ def kill(id) -> str:
 
 
 def main() -> None:
+    api_port = os.getenv('API_PORT')
+    kwargs = {"host": "0.0.0.0", "port": api_port, "debug": True}
+    threading.Thread(target=app.run, kwargs=kwargs).start()
+
+    register_service = RegisterServiceServicer()
+    grpc_port = os.getenv('GRPC_PORT')
+    server = Server(register_service, grpc_port)
+    server.start()
+
     threading.Thread(target=app.run).start()
     for _ in range(config['policy_config']['min_instances']):
         threading.Thread(target=Instance.new, args=[config]).start()

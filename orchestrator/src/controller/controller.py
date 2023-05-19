@@ -11,9 +11,9 @@ class Controller:
         self._set_ec2_client(config["auth_config"])
         self. user_data = \
             "#!/bin/bash\n"
-        f"echo \"ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata | grep instance-id | awk '{{print $2}}')\" | tr ' ' '\n' > ~/.env\n"
-        ""
-
+        f"echo \"ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata --instance-id)\" | tr ' ' '\n' > /home/ubuntu/proyecto-2-telematica/.env\n"
+        "sudo docker-compose -f /home/ubuntu/proyecto-2-telematica/docker-compose.instance.yml up -d"
+    
     @classmethod
     def increase_instances(cls) -> None:
         cls.instances += 1

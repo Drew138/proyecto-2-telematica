@@ -46,7 +46,7 @@ def main():
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": True}
     threading.Thread(target=app.run, kwargs=kwargs).start()
-    grpc_port = 8090
+    grpc_port = os.getenv('GRPC_PORT')
     server = Server(monitor_service, grpc_port)
     server.start()
 
