@@ -38,7 +38,7 @@ class Instance:
 
     @classmethod
     def new(cls, config) -> None:
-        cls.instance_list.append(cls(config))
+        cls.instance_list.append(Instance(config))
 
     @classmethod
     def remove_instance(cls, id) -> None:
@@ -46,7 +46,9 @@ class Instance:
         new_list: list[cls] = []
 
         print(id, flush=True)
+        
         for instance in cls.instance_list:
+            print(instance.id, flush=True)
             if instance.id == id:
                 print(f"found instance to kill {instance.id}", flush=True)
                 instance.kill()
