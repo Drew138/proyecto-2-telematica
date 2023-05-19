@@ -25,6 +25,7 @@ class Instance:
             print("IN SLEEEP!!", flush=True)
             time.sleep(10)
             if not self.is_asleep:
+                print("Instaced contacted, registered", flush=True)
                 self.monitor: Monitor = self.create_monitor()
                 self.start()
                 return
