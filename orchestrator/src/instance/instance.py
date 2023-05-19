@@ -65,6 +65,7 @@ class Instance:
     def create_monitor(self) -> Monitor:
         monitor = Monitor(self)
         if monitor.application_failed_to_start():
+            print("Monitor failed to start, deleting", flush=True)
             self.remove_instance(self.id)
         return monitor
 
@@ -101,7 +102,7 @@ class Instance:
 
         if Controller.instances > self.config['policy_config']['min_instances']:
             return
-
+        print("check termination failed, deleting", flush=True)
         self.remove_instance(self.id)
 
     def check_creation(self, metric: int) -> None:

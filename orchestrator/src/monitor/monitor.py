@@ -25,6 +25,7 @@ class Monitor:
             except Exception:
                 pass
         instance = self.get_instance()
+        print("Calling remove from ping in monitor", flush=True)
         return instance.remove_instance(instance.id)
 
     def update_metric(self) -> None:
@@ -34,8 +35,10 @@ class Monitor:
                 self.metric: int = metric_response.message
                 return
             except Exception:
+                print("Error ocurrio en update metric", flush=True)
                 pass
         instance = self.get_instance()
+        print("Borrando desde update metric", flush=True)
         return instance.remove_instance(instance.id)
 
     def application_failed_to_start(self) -> bool:
