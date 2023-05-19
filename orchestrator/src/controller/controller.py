@@ -8,7 +8,7 @@ class Controller:
     def __init__(self, config: dict) -> None:
         ip = config['orchestrator_config']['ip_address']
         self.instance_config = config["instance_config"]
-        Controller._set_ec2_client(config["auth_config"])
+        self._set_ec2_client(config["auth_config"])
         self. user_data = f'''#!/bin/bash
         echo ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata --instance-id) | tr ' ' '\n' > /home/ubuntu/proyecto-2-telematica/.env
         sudo docker-compose -f /home/ubuntu/proyecto-2-telematica/docker-compose.instance.yml up -d
@@ -22,11 +22,9 @@ class Controller:
     def decrease_instances(cls) -> None:
         cls.instances -= 1
 
-    @classmethod
-    def _set_ec2_client(cls, auth_config: dict) -> None:
-        if hasattr(cls, 'ec2_client'):
-            return
-        cls.ec2_client = boto3.client(
+    
+    def _set_ec2_client(self, auth_config: dict) -> None:
+        self.ec2_client = boto3.client(
             'ec2',
             aws_access_key_id=auth_config["aws_access_key_id"],
             aws_secret_access_key=auth_config["aws_secret_access_key"],
