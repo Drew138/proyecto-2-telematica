@@ -36,7 +36,7 @@ def main() -> None:
     for _ in range(config['policy_config']['min_instances']):
         t = threading.Thread(target=Instance, args=[config])
         t.start()
-        t.join()
+        
 
     #inst = Instance(config)
 
