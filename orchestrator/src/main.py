@@ -13,7 +13,7 @@ config: dict = Config.create('./src/config.json')
 
 @app.route('/create')
 def create() -> str:
-    # Instance.new(config)
+    Instance(config)
     return 'Instance created successfully'
 
 
@@ -33,10 +33,10 @@ def main() -> None:
     server = Server(register_service, grpc_port)
     threading.Thread(target=server.start).start()
 
-    # for _ in range(config['policy_config']['min_instances']):
-    #     threading.Thread(target=Instance.new, args=[config]).start()
+    for _ in range(config['policy_config']['min_instances']):
+        threading.Thread(target=Instance.new, args=[config]).start()
 
-    inst = Instance(config)
+    #inst = Instance(config)
 
     
 
