@@ -6,9 +6,9 @@
     "create_policy": 80
   },
   "auth_config": {
-    "aws_access_key_id": "ASIAXYCIHBMER5UNUXG7",
-    "aws_secret_access_key": "VZLmt57FfFUmzoFsYLYQGwyZTBGkLWmv+UAM5ye3",
-    "aws_session_token": "FwoGZXIvYXdzEF0aDD/OBzgjlPwmwOvk9yLGAehL0Z59pBvVkO5FGEqcQODXoAdxUXm/xVGXSmW41k9e8MI57pfsa6I2fgj9mGA859QUnNM4qioX6Ug2vDaPvF15af4hvE2nOoFb9tHghUoEfCek1dFPJFRObGXB5HgfsTp9Wa8CbLrPg856iTuhqZEt0CUMqM1IWMoFXOxcAL87wcVw83cqMCpjGX9Oj2CdfjgbYCl+/t5p9e5RGBRzJdztjaYA0nz/pdK+E2hXKYkdlK0oYrikmTt6Qk3jWYtsEumrFNQf8yj9sJ2jBjItGi+UnJj+oOOkkzpuGX2RzlQ7RXt9acWUnNBBiKVK85A5ol5TCeotRRbGSvTO",
+    "aws_access_key_id": "ASIAXYCIHBME2KOCRJU2",
+    "aws_secret_access_key": "kSKDc6CjpyDZSTFnbxPyDXiKBMOaUFl+XXHp/hQy",
+    "aws_session_token": "FwoGZXIvYXdzEGQaDMYUSJt6/9m6U5AF2SLGAdEyJ3CRkhaZ6lRxN9lk2aK9O6zHOT7rqA4QEhF0l/uAaIihlc7okqsYWTBLusotfRNj0A7JAcUxft6gHjoNXUvm04fRMWWhjKeTA59ZzeT5CF/UfFZlXV1hG2Hsv6Flk95UJnhy9lIFHyJbxA5F+TJWurQ7JxYPNSGtt7tYLnGEm54MU1LViiagRQE/YhRxViFqbb43jC0cSezhm0prkRjYlOoE1Kq5LiRFTHjrxTBcZi1OmlWJWJYvMxewtrsyR1X3/JyxmSjB956jBjItQyjGsAqjPOEzA4R0ZBX3JLFDQU4Vr+5JFmXCyavetkVGCIj5G8Mtp9VfRyj1",
     "region_name": "us-east-1"
   },
   "instance_config": {
