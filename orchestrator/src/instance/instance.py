@@ -45,9 +45,10 @@ class Instance:
         cls.lock.acquire()
         new_list: list[cls] = []
 
+        print(id, flush=True)
         for instance in cls.instance_list:
             if instance.id == id:
-                print(f"found instance to kill {instance.id}")
+                print(f"found instance to kill {instance.id}", flush=True)
                 instance.kill()
                 instance.controller.delete_instance(instance.id)
             else:
