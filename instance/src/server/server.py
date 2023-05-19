@@ -12,6 +12,6 @@ class Server:
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         monitor_pb2_grpc.add_MonitorServiceServicer_to_server(
             self.service, server)
-        server.add_insecure_port(f'[::]:{self.port}')
+        server.add_insecure_port(f'0.0.0.0:{self.port}')
         server.start()
         server.wait_for_termination()
