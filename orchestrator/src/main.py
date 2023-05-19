@@ -8,7 +8,7 @@ import os
 
 app: Flask = Flask(__name__)
 
-config: dict = Config.create('./config.json')
+config: dict = Config.create('./src/config.json')
 
 
 @app.route('/create')
