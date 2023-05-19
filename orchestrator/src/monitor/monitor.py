@@ -6,7 +6,6 @@ import threading
 
 
 class Monitor:
-    lock = threading.Lock()
     def __init__(self, instance) -> None:
         self.instance = instance
         self.client: Client = self._create_client()
@@ -19,9 +18,7 @@ class Monitor:
         return self.instance
 
     def _create_client(self) -> Client:
-        self.lock.acquire()
         c = Client(self.instance.get_socket())
-        self.lock.release()
         return c
 
     def ping(self) -> None:

@@ -7,7 +7,7 @@ import concurrent
 import threading
 import os
 
-thread_pool_ref = concurrent.futures.ThreadPoolExecutor()
+thread_pool_ref = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
 app: Flask = Flask(__name__)
 
