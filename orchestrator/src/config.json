@@ -19,6 +19,6 @@
     "port": 80
   },
   "orchestrator_config": {
-    "ip_address": "172.3188.166"
+    "ip_address": "172.31.88.166"
   }
 }
