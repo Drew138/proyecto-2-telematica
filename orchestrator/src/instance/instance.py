@@ -10,13 +10,14 @@ class Instance:
     instance_list = []
     lock = threading.Lock()
 
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: dict, controller) -> None:
         self.instance_list.append(self)
         self.is_alive: bool = True
         self.is_asleep = True
         self.port: int = os.getenv('GRPC_PORT')
         self.config: dict = config
-        self.controller: Controller = self.create_controller()
+        self.controller: Controller = controller
+        self.id, self.ip = controller.create_instance()
         self.sleep()
             
 
@@ -56,11 +57,6 @@ class Instance:
 
         cls.instance_list: list[cls] = new_list
         cls.lock.release()
-
-    def create_controller(self) -> Controller:
-        controller: Controller = Controller(self.config)
-        self.id, self.ip = controller.create_instance()
-        return controller
 
     def create_monitor(self) -> Monitor:
         monitor = Monitor(self)
@@ -117,4 +113,4 @@ class Instance:
         if Controller.instances >= self.config['policy_config']['max_instances']:
             return
 
-        threading.Thread(target=Instance, args=[self.config]).start()
+        threading.Thread(target=Instance, args=[self.config, self.controller]).start()

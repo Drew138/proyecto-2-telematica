@@ -1,4 +1,5 @@
 from services.register_service import RegisterServiceServicer
+from controller.controller import Controller
 from instance.instance import Instance
 from server.server import Server
 from config.config import Config
@@ -33,8 +34,9 @@ def main() -> None:
     server = Server(register_service, grpc_port)
     threading.Thread(target=server.start).start()
 
+    controller = Controller(config)
     for _ in range(config['policy_config']['min_instances']):
-        threading.Thread(target=Instance, args=[config]).start()
+        threading.Thread(target=Instance, args=[config, controller]).start()
 
     #inst = Instance(config)
 
