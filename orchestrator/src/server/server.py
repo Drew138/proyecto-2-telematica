@@ -10,14 +10,13 @@ class Server:
         self.service = service
         self.port = port
 
-    def start(self) -> None:
+    def start(self, executor) -> None:
         print("Starting server controller grpc", flush=True)
-
-        with futures.ThreadPoolExecutor(max_workers=10) as executor:
-            server = grpc.server(executor)
-            register_pb2_grpc.add_RegisterServiceServicer_to_server(
-                self.service, server)
-            server.add_insecure_port(f'0.0.0.0:{self.port}')
-            server.start()
-            print("GRPC ready", flush=True)
-            server.wait_for_termination()
+     
+        server = grpc.server(executor)
+        register_pb2_grpc.add_RegisterServiceServicer_to_server(
+            self.service, server)
+        server.add_insecure_port(f'0.0.0.0:{self.port}')
+        server.start()
+        print("GRPC ready", flush=True)
+        server.wait_for_termination()

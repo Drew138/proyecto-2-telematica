@@ -3,6 +3,7 @@ from instance.instance import Instance
 from server.server import Server
 from config.config import Config
 from flask import Flask
+import concurrent
 import threading
 import os
 
@@ -24,6 +25,8 @@ def kill(id) -> str:
 
 
 def main() -> None:
+    thread_pool_ref = concurrent.futures.ThreadPoolExecutor
+
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
     threading.Thread(target=app.run, kwargs=kwargs).start()
@@ -31,7 +34,7 @@ def main() -> None:
     register_service = RegisterServiceServicer()
     grpc_port = os.getenv('GRPC_PORT')
     server = Server(register_service, grpc_port)
-    threading.Thread(target=server.start).start()
+    threading.Thread(target=server.start, args=[thread_pool_ref]).start()
 
     for _ in range(config['policy_config']['min_instances']):
         t = threading.Thread(target=Instance, args=[config])
