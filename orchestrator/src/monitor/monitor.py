@@ -6,7 +6,7 @@ class Monitor:
     def __init__(self, instance) -> None:
         self.instance = instance
         self.client: Client = self._create_client()
-        self.metric = 0
+        self.metric = 15
 
     def get_metric(self) -> int:
         return self.metric

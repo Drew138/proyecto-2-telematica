@@ -80,15 +80,19 @@ class Instance:
 
     def watch_connection(self) -> None:
         while self.is_alive:
+            print("watch is alive", flush=True)
             self.monitor.ping()
             time.sleep(1)
 
     def watch_metric(self) -> None:
         while self.is_alive:
+            print("watch metric", flush=True)
             self.monitor.update_metric()
             metric: int = self.monitor.get_metric()
+            print("watch metric metric:",metric, flush=True)
             self.check_termination(metric)
             self.check_creation(metric)
+            print("end watch metric", flush=True)
             time.sleep(20)
 
     def check_termination(self, metric: int) -> None:
