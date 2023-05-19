@@ -39,18 +39,26 @@ def unregister() -> Response:
 def main():
     # Client
     self_id = os.getenv('SELF_ID')
+    print("created grpc client", flush=True)
+
     grpc_client.register(self_id)
+    print("called register", flush=True)
 
     # Flask
+    print("Flask init", flush=True)
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
     threading.Thread(target=app.run, kwargs=kwargs).start()
+    print("Flask done", flush=True)
 
     # Server
+    print("server init", flush=True)
     monitor_service = MonitorServiceServicer()
     grpc_port = os.getenv('GRPC_PORT')
     server = Server(monitor_service, grpc_port)
+    print("Runing sever", flush=True)
     server.start()
+
 
 
 if __name__ == "__main__":

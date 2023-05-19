@@ -12,7 +12,6 @@ class Controller:
         self. user_data = f'''#!/bin/bash
         echo ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata --instance-id) | tr ' ' '\n' > /home/ubuntu/proyecto-2-telematica/.env
         sudo docker-compose -f /home/ubuntu/proyecto-2-telematica/docker-compose.instance.yml up -d
-        sleep 30s
         '''
     
     @classmethod

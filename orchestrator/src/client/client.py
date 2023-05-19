@@ -18,7 +18,8 @@ class Client:
                 channel)
             self.monitor_stub.Ping(empty_pb2.Empty())
             return
+        except grpc.RpcError as rpc_error:
+            self.failed_to_start: bool = True
         finally:
             time.sleep(10)
 
-            self.failed_to_start: bool = True
