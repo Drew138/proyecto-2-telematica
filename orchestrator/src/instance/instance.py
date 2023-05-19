@@ -28,7 +28,7 @@ class Instance:
                 self.start()
                 return
         print("KILLED INSTANCE", flush=True)
-        self.remove_instance(self.id)
+        Instance.remove_instance(self.id)
 
     @classmethod
     def awaken(cls, instance_id):
