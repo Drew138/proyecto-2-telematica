@@ -3,7 +3,7 @@ from client.client import Client
 
 
 class Monitor:
-    def __init__(self, instance) -> None:
+    def __init__(self, instance):
         self.instance = instance
         self.client: Client = self._create_client()
 
@@ -13,7 +13,7 @@ class Monitor:
     def get_instance(self):
         return self.instance
 
-    def _create_client(self) -> Client:
+    def _create_client(self):
         return Client(self.instance.get_socket())
 
     @staticmethod
@@ -30,11 +30,11 @@ class Monitor:
         return inner
 
     @safe_grpc_call
-    def ping(self) -> None:
+    def ping(self):
         self.client.monitor_stub.Ping()
 
     @safe_grpc_call
-    def update_metric(self) -> None:
+    def update_metric(self):
         metric_response: MetricResponse = self.client.monitor_stub.GetMetrics()
         self.metric: int = metric_response.message
 
