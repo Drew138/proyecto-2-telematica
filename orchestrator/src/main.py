@@ -1,6 +1,6 @@
-from orchestrator.src.services.register_service import RegisterServiceServicer
-from orchestrator.src.instance.instance import Instance
-from orchestrator.src.server.server import Server
+from src.services.register_service import RegisterServiceServicer
+from src.instance.instance import Instance
+from src.server.server import Server
 from config.config import Config
 from flask import Flask
 import threading

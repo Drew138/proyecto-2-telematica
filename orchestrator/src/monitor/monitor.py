@@ -1,6 +1,6 @@
-from instance.src.protobuf.monitor_pb2 import MetricResponse
-from orchestrator.src.instance.instance import Instance
-from orchestrator.src.client.client import Client
+from src.protobuf.monitor_pb2 import MetricResponse
+from src.instance.instance import Instance
+from src.client.client import Client
 
 
 class Monitor:

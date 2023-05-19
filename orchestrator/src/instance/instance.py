@@ -1,5 +1,5 @@
-from orchestrator.src.monitor.monitor import Monitor
-from orchestrator.src.controller.controller import Controller
+from src.monitor.monitor import Monitor
+from src.controller.controller import Controller
 import threading
 import time
 
