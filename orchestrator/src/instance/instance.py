@@ -4,23 +4,23 @@ import threading
 import time
 
 
-instance_list = []
-lock = threading.Lock()
-
 class Instance:
 
+    instance_list = []
+    lock = threading.Lock()
+
     def __init__(self, config: dict) -> None:
+        self.instance_list.append(self)
         self.is_alive: bool = True
         self.is_asleep = True
         self.port: int = config['instance_config']['port']
         self.config: dict = config
         self.controller: Controller = self.create_controller()
-
         self.sleep()
             
 
     def sleep(self):
-        for _ in range(1):
+        for _ in range(20):
             print("IN SLEEEP!!", flush=True)
             time.sleep(10)
             if not self.is_asleep:
@@ -32,23 +32,19 @@ class Instance:
 
     @classmethod
     def awaken(cls, instance_id):
-        for instance in instance_list:
+        for instance in cls.instance_list:
             if instance.id == instance_id:
                 instance.is_asleep = False
 
     @classmethod
-    def new(cls, config) -> None:
-        instance_list.append(Instance(config))
-
-    @classmethod
     def remove_instance(cls, id) -> None:
-        lock.acquire()
+        cls.lock.acquire()
         new_list: list[cls] = []
 
         print(id, flush=True)
         
-        for instance in instance_list:
-            print(instance.id, flush=True)
+        for instance in cls.instance_list:
+            print()
             if instance.id == id:
                 print(f"found instance to kill {instance.id}", flush=True)
                 instance.kill()
@@ -56,8 +52,8 @@ class Instance:
             else:
                 new_list.append(instance)
 
-        instance_list: list[cls] = new_list
-        lock.release()
+        cls.instance_list: list[cls] = new_list
+        cls.lock.release()
 
     def create_controller(self) -> Controller:
         controller: Controller = Controller(self.config)
@@ -109,4 +105,4 @@ class Instance:
         if Controller.instances < self.config['policy_config']['max_instances']:
             return
 
-        threading.Thread(target=self.new, args=[self.config]).start()
+        threading.Thread(target=Instance, args=[self.config]).start()
