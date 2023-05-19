@@ -2,6 +2,7 @@ from monitor.monitor import Monitor
 from controller.controller import Controller
 import threading
 import time
+import os
 
 
 class Instance:
@@ -13,7 +14,7 @@ class Instance:
         self.instance_list.append(self)
         self.is_alive: bool = True
         self.is_asleep = True
-        self.port: int = config['instance_config']['port']
+        self.port: int = os.getenv('GRPC_PORT')
         self.config: dict = config
         self.controller: Controller = self.create_controller()
         self.sleep()
