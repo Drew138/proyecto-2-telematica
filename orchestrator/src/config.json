@@ -17,5 +17,8 @@
     "instance_type": "t2.micro",
     "key_pair_name": "vockey",
     "port": 80
+  },
+  "orchestrator_config": {
+    "ip_address": "0.0.0.0"
   }
 }

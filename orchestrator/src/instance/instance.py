@@ -11,11 +11,28 @@ class Instance:
 
     def __init__(self, config: dict) -> None:
         self.is_alive: bool = True
+        self.is_asleep = True
         self.port: int = config['instance_config']['port']
         self.config: dict = config
         self.controller: Controller = self.create_controller()
-        self.monitor: Monitor = self.create_monitor()
-        self.start()
+
+        self.sleep()
+        if self.is_alive:
+            self.monitor: Monitor = self.create_monitor()
+            self.start()
+
+    def sleep(self):
+        for _ in range(10):
+            time.sleep(10)
+            if not self.is_asleep:
+                return
+        self.remove_instance(self.id)
+
+    @classmethod
+    def awaken(cls, instance_id):
+        for instance in cls.instance_list:
+            if instance.id == instance_id:
+                instance.is_asleep = False
 
     @classmethod
     def new(cls, config) -> None:

@@ -6,13 +6,13 @@ class Controller:
     instances: int = 0
 
     def __init__(self, config: dict) -> None:
-        ip = 'imgaye'
+        ip = config['orchestrator_ip']['ip_address']
         self.instance_config = config["instance_config"]
         self._set_ec2_client(config["auth_config"])
         self. user_data = \
             "#!/bin/bash\n"
-        f"export ORCHESTRATOR_IP={ip}\n"
-        "classmethod"
+        f"echo \"ORCHESTRATOR_IP={ip} SELF_ID=$(ec2metadata | grep instance-id | awk '{{print $2}}')\" | tr ' ' '\n' > ~/.env\n"
+        ""
 
     @classmethod
     def increase_instances(cls) -> None:
@@ -55,3 +55,4 @@ class Controller:
             InstanceIds=[instance_id]
         )
         self.decrease_instances()
+

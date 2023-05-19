@@ -1,6 +1,8 @@
 import grpc
 import futures
-from instance.src.protobuf import 
+from instance.src.protobuf import (
+    register_pb2_grpc
+)
 
 
 class Server:

@@ -1,9 +1,8 @@
-
-
-
 # FALTA
-- IMPEMENTAR REGISTER
-- IMPLEMENTAR UNREGISTER
+- revisar el bash script
+- montar los dockerfiel/compose
+- probar
+- documentar
 
 
 

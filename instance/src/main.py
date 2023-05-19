@@ -2,13 +2,23 @@ from instance.src.services.monitor_service import MonitorServiceServicer
 from instance.src.monitor.monitor import Monitor
 from instance.src.server.server import Server
 import threading
-import sys
 from flask import Flask, request, jsonify, Response
+from instance.src.client.client import Client
+import os
+
+
+def create_grpc_client():
+    # Sacar ip del orchestrator
+    orchestrator_ip = os.getenv('ORCHESTRATOR_IP')
+    grpc_port = os.getenv('GRPC_PORT')
+    socket = f'{orchestrator_ip}:{grpc_port}'
+    # Conectar por grpc con esa ip
+    return Client(socket)
+
+
+grpc_client = create_grpc_client()
 
 app: Flask = Flask(__name__)
-
-register_client = Client()
-
 
 @app.route('/set-metric', methods=['POST'])
 def create() -> Response:
@@ -20,17 +30,20 @@ def create() -> Response:
 
 @app.route('/unregister', methods=['POST'])
 def unregister() -> Response:
-    register_client.unregister()
+    self_id = os.getenv('SELF_ID')
+    grpc_client.unregister(self_id)
     response = {'message': 'Instance unregistered succesfully'}
     return jsonify(response)
 
 
 def main():
-    orchestrator_ip = sys.argv[1]
+    # Mandar register
+    self_id = os.getenv('SELF_ID')
+    grpc_client.register(self_id)
+
+    # Iniciar servicios
     monitor_service = MonitorServiceServicer()
-    
-    
-    api_port = 8080
+    api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": True}
     threading.Thread(target=app.run, kwargs=kwargs).start()
     grpc_port = 8090
