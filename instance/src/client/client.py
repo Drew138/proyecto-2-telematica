@@ -14,7 +14,7 @@ class Client:
         self.socket = socket
 
     def register(self, instance_id: str) -> None:
-        channel: grpc.Channel = grpc.insecure_channel(self.socket)
+        channel: grpc.Channel = grpc.insecure_channel(self.socket, options=(('grpc.enable_http_proxy', 0),))
         self.register_stub: RegisterServiceStub = RegisterServiceStub(
             channel)
         

@@ -9,7 +9,7 @@ import os
 
 def create_grpc_client():
     # Sacar ip del orchestrator
-    orchestrator_ip = os.getenv('ORCHESTRATOR_IP')
+    orchestrator_ip = os.getenv('ORCHESTRATOR_IP', '44.212.73.107')
     grpc_port = os.getenv('GRPC_PORT')
     socket = f'{orchestrator_ip}:{grpc_port}'
     # Conectar por grpc con esa ip
@@ -37,15 +37,17 @@ def unregister() -> Response:
 
 
 def main():
-    # Mandar register
+    # Client
     self_id = os.getenv('SELF_ID')
     grpc_client.register(self_id)
 
-    # Iniciar servicios
-    monitor_service = MonitorServiceServicer()
+    # Flask
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": True}
     threading.Thread(target=app.run, kwargs=kwargs).start()
+
+    # Server
+    monitor_service = MonitorServiceServicer()
     grpc_port = os.getenv('GRPC_PORT')
     server = Server(monitor_service, grpc_port)
     server.start()
