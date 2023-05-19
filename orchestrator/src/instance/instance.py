@@ -97,6 +97,11 @@ class Instance:
             time.sleep(20)
 
     def check_termination(self, metric: int) -> None:
+        print("Check termination", flush=True)
+        print("Metric", metric, flush=True)
+        print("Delete policy", self.config['policy_config']['delete_policy'], flush=True)
+        print("Number of current instances",Controller.instances, flush=True)
+        print("Policy min instances", self.config['policy_config']['delete_policy'], flush=True)
         if metric <= self.config['policy_config']['delete_policy']:
             return
 
