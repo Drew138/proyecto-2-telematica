@@ -117,4 +117,4 @@ class Instance:
         if Controller.instances >= self.config['policy_config']['max_instances']:
             return
 
-        threading.Thread(target=Instance, args=[self.config, self.controller]).start()
+        threading.Thread(target=Instance, args=[self.config]).start()
