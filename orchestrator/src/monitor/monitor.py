@@ -23,13 +23,11 @@ class Monitor:
 
     def ping(self) -> None:
         instance = self.get_instance()
-        print(f"Intentando pingear a IP={instance.ip}")
         for _ in range(5):
             try:
                 return_value = self.client.monitor_stub.Ping(empty_pb2.Empty())
                 return return_value
             except Exception:
-                print("Error ocurrio en ping", flush=True)
                 pass
         
         print(f"Fallo Pingeando a IP={instance.ip}.\nEliminando instancia", flush=True)
