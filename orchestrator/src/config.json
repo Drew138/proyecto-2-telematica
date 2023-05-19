@@ -6,13 +6,13 @@
     "create_policy": 80
   },
   "auth_config": {
-    "aws_access_key_id": "",
-    "aws_secret_access_key": "",
-    "aws_session_token": "",
+    "aws_access_key_id": "ASIAXYCIHBME7DE4IFV4",
+    "aws_secret_access_key": "MTl+ubF6XDFvmwKBsO4forxEJ70EyHhoqWin4w1f",
+    "aws_session_token": "FwoGZXIvYXdzEFIaDJiXv8o2X6pmTbYjgCLGAS483pa+/tF/tZv2BwCWqu2/0hgqHdmUbshR7Ztc65pxdxtQB95ukQY6OxmtQiAKe+YNjUjJECPrL/n9WKYTNX5me9j3RBFZFJbtxfwcxIxwvhFD97DlvWFcI2KXsue/xTTHr7PHPghPrx4vi6Xqt1PsK/5hKMIipdblTftfsEY0+ckW1DDwG96zgooAl9kALpteVFVJFhxEs9+rBob89hRPzTY5uMb+uKkhXdmPhijONP6IsFkZ5B5RRnJ38OUZZoHpAFY3Sij4ipujBjIthofUsFTuphCyQKpKaqDl9M9joP1R+8710DG2M7pw3EdG3s718CVGyMRrqX9z",
     "region_name": "us-east-1"
   },
   "instance_config": {
-    "ami_id": "",
+    "ami_id": "ami-07ee9370ce73b9d72",
     "security_group_ids": ["sg-094b94a7efca37fe8"],
     "instance_type": "t2.micro",
     "key_pair_name": "vockey",
