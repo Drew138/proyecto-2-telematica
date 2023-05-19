@@ -1,11 +1,11 @@
 from google.protobuf import empty_pb2
-from src.monitor.monitor import Monitor
-from src.protobuf.monitor_pb2 import (
+from monitor.monitor import Monitor
+from protobuf.monitor_pb2 import (
     PingResponse,
     MetricResponse,
     RegisterResponse,
 )
-from src.protobuf import monitor_pb2_grpc
+from protobuf import monitor_pb2_grpc
 
 
 class MonitorServiceServicer(monitor_pb2_grpc.MonitorServiceServicer):

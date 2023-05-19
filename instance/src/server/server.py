@@ -1,6 +1,6 @@
 import grpc
 import concurrent.futures as futures
-from instance.src.protobuf import monitor_pb2_grpc
+from protobuf import monitor_pb2_grpc
 
 
 class Server:

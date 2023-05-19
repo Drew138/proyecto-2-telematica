@@ -1,9 +1,9 @@
-from src.services.monitor_service import MonitorServiceServicer
-from src.monitor.monitor import Monitor
-from src.server.server import Server
+from services.monitor_service import MonitorServiceServicer
+from monitor.monitor import Monitor
+from server.server import Server
 import threading
 from flask import Flask, request, jsonify, Response
-from src.client.client import Client
+from client.client import Client
 import os
 
 
