@@ -26,7 +26,8 @@ class Monitor:
                 pass
         instance = self.get_instance()
         print("Calling remove from ping in monitor", flush=True)
-        return instance.remove_instance(instance.id)
+        instance.remove_instance(instance.id)
+        return 
 
     def update_metric(self) -> None:
         for _ in range(5):
@@ -35,6 +36,7 @@ class Monitor:
                 self.metric: int = metric_response.message
                 return
             except Exception:
+                print("Error:",Exception, flush=True)
                 print("Error ocurrio en update metric", flush=True)
                 pass
         instance = self.get_instance()
