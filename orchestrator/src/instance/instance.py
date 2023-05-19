@@ -47,6 +47,7 @@ class Instance:
 
         for instance in cls.instance_list:
             if instance.id == id:
+                print(f"found instance to kill {instance.id}")
                 instance.kill()
                 instance.controller.delete_instance(instance.id)
             else:
