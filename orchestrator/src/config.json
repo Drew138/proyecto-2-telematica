@@ -12,7 +12,7 @@
     "region_name": "us-east-1"
   },
   "instance_config": {
-    "ami_id": "ami-08ce00836db58a61f",
+    "ami_id": "ami-0c5f9f30125ee0151",
     "security_group_ids": ["sg-094b94a7efca37fe8"],
     "instance_type": "t2.micro",
     "key_pair_name": "vockey",
