@@ -1,6 +1,8 @@
 from protobuf.monitor_pb2 import MetricResponse
-from instance.instance import Instance
 from client.client import Client
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from instance.instance import Instance
 
 
 class Monitor:
