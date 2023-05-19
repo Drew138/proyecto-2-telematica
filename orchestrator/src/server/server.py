@@ -1,5 +1,5 @@
 import grpc
-import futures
+import concurrent.futures as futures
 from instance.src.protobuf import (
     register_pb2_grpc
 )
