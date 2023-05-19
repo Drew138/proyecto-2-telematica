@@ -4,10 +4,10 @@ import threading
 import time
 
 
-class Instance:
+instance_list = []
+lock = threading.Lock()
 
-    instance_list = []
-    lock = threading.Lock()
+class Instance:
 
     def __init__(self, config: dict) -> None:
         self.is_alive: bool = True
@@ -32,22 +32,22 @@ class Instance:
 
     @classmethod
     def awaken(cls, instance_id):
-        for instance in cls.instance_list:
+        for instance in instance_list:
             if instance.id == instance_id:
                 instance.is_asleep = False
 
     @classmethod
     def new(cls, config) -> None:
-        cls.instance_list.append(Instance(config))
+        instance_list.append(Instance(config))
 
     @classmethod
     def remove_instance(cls, id) -> None:
-        cls.lock.acquire()
+        lock.acquire()
         new_list: list[cls] = []
 
         print(id, flush=True)
         
-        for instance in cls.instance_list:
+        for instance in instance_list:
             print(instance.id, flush=True)
             if instance.id == id:
                 print(f"found instance to kill {instance.id}", flush=True)
@@ -56,8 +56,8 @@ class Instance:
             else:
                 new_list.append(instance)
 
-        cls.instance_list: list[cls] = new_list
-        cls.lock.release()
+        instance_list: list[cls] = new_list
+        lock.release()
 
     def create_controller(self) -> Controller:
         controller: Controller = Controller(self.config)
