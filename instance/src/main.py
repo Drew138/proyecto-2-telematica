@@ -43,7 +43,7 @@ def main():
 
     # Flask
     api_port = os.getenv('API_PORT')
-    kwargs = {"host": "0.0.0.0", "port": api_port, "debug": True}
+    kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
     threading.Thread(target=app.run, kwargs=kwargs).start()
 
     # Server
