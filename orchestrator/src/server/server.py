@@ -1,6 +1,6 @@
 import grpc
 import concurrent.futures as futures
-from src.protobuf import (
+from protobuf import (
     register_pb2_grpc
 )
 

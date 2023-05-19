@@ -1,5 +1,5 @@
-from src.monitor.monitor import Monitor
-from src.controller.controller import Controller
+from monitor.monitor import Monitor
+from controller.controller import Controller
 import threading
 import time
 

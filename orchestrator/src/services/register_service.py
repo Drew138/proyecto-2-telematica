@@ -1,11 +1,11 @@
-from src.protobuf.register_pb2 import (
+from protobuf.register_pb2 import (
     RegisterServiceServicer,
     RegisterResponse,
     UnregisterResponse,
     InstanceId
 )
 
-from src.instance.instance import Instance
+from instance.instance import Instance
 
 class RegisterServiceServicer(RegisterServiceServicer):
     def Register(self, request: InstanceId, context) -> RegisterResponse:

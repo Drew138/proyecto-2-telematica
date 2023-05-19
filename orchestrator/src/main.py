@@ -1,6 +1,6 @@
-from src.services.register_service import RegisterServiceServicer
-from src.instance.instance import Instance
-from src.server.server import Server
+from services.register_service import RegisterServiceServicer
+from instance.instance import Instance
+from server.server import Server
 from config.config import Config
 from flask import Flask
 import threading
