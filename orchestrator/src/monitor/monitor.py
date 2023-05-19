@@ -1,19 +1,16 @@
 from protobuf.monitor_pb2 import MetricResponse
 from client.client import Client
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from instance.instance import Instance
 
 
 class Monitor:
-    def __init__(self, instance: Instance) -> None:
-        self.instance: Instance = instance
+    def __init__(self, instance) -> None:
+        self.instance = instance
         self.client: Client = self._create_client()
 
     def get_metric(self) -> int:
         return self.metric
 
-    def get_instance(self) -> Instance:
+    def get_instance(self):
         return self.instance
 
     def _create_client(self) -> Client:
