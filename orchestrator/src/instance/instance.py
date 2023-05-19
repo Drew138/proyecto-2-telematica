@@ -20,7 +20,7 @@ class Instance:
             
 
     def sleep(self):
-        for _ in range(20):
+        for _ in range(1):
             print("IN SLEEEP!!", flush=True)
             time.sleep(10)
             if not self.is_asleep:
