@@ -98,8 +98,8 @@ Este archivo cuenta con la siguiente estructura:
 en este se configuran destalles de la creacion de instancias (segmento `policy_config`), autenticacion (`auth_config`), configuracin de instancias (`instance_config`) y orquestrador (`orchestrator_config`).
 
 ## opcional - detalles de la organización del código por carpetas o descripción de algún archivo. (ESTRUCTURA DE DIRECTORIOS Y ARCHIVOS IMPORTANTE DEL PROYECTO, comando 'tree' de linux)
-## 
-## opcionalmente - si quiere mostrar resultados o pantallazos 
+![image](https://github.com/Drew138/proyecto-2-telematica/assets/65835577/4898e152-0576-4a51-a3a7-528424ca7e3d)
+
 
 # 4. Descripción del ambiente de EJECUCIÓN (en producción) lenguaje de programación, librerias, paquetes, etc, con sus numeros de versiones.
 
