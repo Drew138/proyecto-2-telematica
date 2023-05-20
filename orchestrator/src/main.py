@@ -3,8 +3,11 @@ from instance.instance import Instance
 from server.server import Server
 from config.config import Config
 from flask import Flask
+import concurrent
 import threading
 import os
+
+
 
 app: Flask = Flask(__name__)
 
@@ -24,18 +27,23 @@ def kill(id) -> str:
 
 
 def main() -> None:
+
+    print("Iniciando aplicacion de flask", flush=True)
     api_port = os.getenv('API_PORT')
     kwargs = {"host": "0.0.0.0", "port": api_port, "debug": False}
     threading.Thread(target=app.run, kwargs=kwargs).start()
 
+    print("Iniciando servidor de GRPC para registrar", flush=True)
     register_service = RegisterServiceServicer()
     grpc_port = os.getenv('GRPC_PORT')
     server = Server(register_service, grpc_port)
     threading.Thread(target=server.start).start()
 
+    print("Iniciando la creacion de instancias", flush=True)
     for _ in range(config['policy_config']['min_instances']):
-        t = threading.Thread(target=Instance, args=[config]).start()
-        t.join()
+        t = threading.Thread(target=Instance, args=[config])
+        t.start()
+        
 
     #inst = Instance(config)
 

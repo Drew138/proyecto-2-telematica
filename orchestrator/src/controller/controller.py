@@ -32,7 +32,7 @@ class Controller:
             region_name=auth_config["region_name"],
         )
 
-    def create_instance(self) -> tuple[str, str]:
+    def create_instance(self):
         response = self.ec2_client.run_instances(
             ImageId=self.instance_config["ami_id"],
             UserData=self.user_data,
