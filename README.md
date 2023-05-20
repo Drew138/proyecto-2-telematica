@@ -6,7 +6,7 @@
 # Profesor: Edwin Montoya, emontoya@eafit.edu.co
 
 
-# Proyecto 2
+# Proyecto 2 - Implementacion de Autoscaler con IaC
 #
 # 1. breve descripción de la actividad
 
