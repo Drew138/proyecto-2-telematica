@@ -37,6 +37,8 @@ N/A
 
 # 2. información general de diseño de alto nivel, arquitectura, patrones, mejores prácticas utilizadas.
 
+![Arquitectura Topico Tele](https://github.com/Drew138/proyecto-2-telematica/assets/65835577/b4809d3d-a327-456d-8b76-343dd07eb418)
+
 # 3. Descripción del ambiente de desarrollo y técnico: lenguaje de programación, librerias, paquetes, etc, con sus numeros de versiones.
 
 ## como se compila y ejecuta.
